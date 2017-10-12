@@ -28,7 +28,7 @@ public class TestNetworkModule {
         return new NetworkManagerInterface() {
             @Override
             public Observable<Movie> getMovieDetail(String movieId) {
-                return Observable.just(getSample().getMovieList().get(0));
+                return Observable.just(getById(movieId));
             }
 
             @Override
@@ -41,6 +41,15 @@ public class TestNetworkModule {
                 return Observable.just(search(query));
             }
         };
+    }
+
+    private Movie getById(String movieId) {
+        for (Movie m : getSample().getMovieList()) {
+            if (movieId.contentEquals(String.valueOf(m.getId()))) {
+                return m;
+            }
+        }
+        return null;
     }
 
     private MovieResult search(String query) {

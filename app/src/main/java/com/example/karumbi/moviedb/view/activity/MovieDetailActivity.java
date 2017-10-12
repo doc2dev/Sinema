@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.karumbi.moviedb.App;
 import com.example.karumbi.moviedb.R;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.util.Utils;
@@ -23,10 +24,6 @@ import rx.schedulers.Schedulers;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    public static final String MOVIE_TITLE = "movie_title";
-    public static final String MOVIE_POSTER = "movie_poster";
-    public static final String MOVIE_ID = "movie_id";
-    public static final String MOVIE_DETAILS = "movie_details";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.movie_poster)
@@ -43,18 +40,16 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.movie_detail);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        String posterPath = getIntent().getStringExtra(MOVIE_POSTER);
-        Picasso.with(this)
-                .load(Utils.getBackdropUrl(posterPath))
-                .into(moviePoster);
-        String detailsSummary = getIntent().getStringExtra(MOVIE_DETAILS);
-        movieDetails.setText(detailsSummary);
-        String title = getIntent().getStringExtra(MOVIE_TITLE);
-        getSupportActionBar().setTitle(title);
         viewModel = MovieDetailViewModel.getInstance();
+        viewModel.inject(App.INSTANCE.networkComponent);
+        Movie movie = viewModel.movie;
+        Picasso.with(this)
+                .load(Utils.getBackdropUrl(movie.getPosterPath()))
+                .into(moviePoster);
+        movieDetails.setText(movie.getOverview());
+        getSupportActionBar().setTitle(movie.getTitle());
         progressBar.setVisibility(View.VISIBLE);
-        String id = String.valueOf(getIntent().getIntExtra(MOVIE_ID, -1));
-        fetchMovieDetails(id);
+        fetchMovieDetails(String.valueOf(movie.getId()));
     }
 
     private void fetchMovieDetails(String id) {

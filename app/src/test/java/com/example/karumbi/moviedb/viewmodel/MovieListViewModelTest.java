@@ -12,6 +12,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import rx.schedulers.Schedulers;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -36,6 +38,7 @@ public class MovieListViewModelTest {
         popularMovieResult = null;
         CountDownLatch latch = new CountDownLatch(1);
         viewModel.fetchPopularMovies()
+                .observeOn(Schedulers.io())
                 .subscribe(testResult -> {
                     popularMovieResult = testResult;
                     latch.countDown();
@@ -52,6 +55,7 @@ public class MovieListViewModelTest {
         searchMovieResult = null;
         CountDownLatch latch = new CountDownLatch(1);
         viewModel.searchMovies(query)
+                .observeOn(Schedulers.io())
                 .subscribe(testResult -> {
                     searchMovieResult = testResult;
                     latch.countDown();

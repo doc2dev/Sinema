@@ -13,13 +13,10 @@ import com.example.karumbi.moviedb.R;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.util.Utils;
 import com.example.karumbi.moviedb.view.activity.MovieDetailActivity;
+import com.example.karumbi.moviedb.viewmodel.MovieDetailViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-/**
- * Created by Eston on 11/10/2017.
- */
 
 public class SearchAdapter extends BaseAdapter {
 
@@ -69,21 +66,10 @@ public class SearchAdapter extends BaseAdapter {
                     .load(Utils.getPosterUrl(movie.getPosterPath()))
                     .placeholder(R.drawable.movie_placeholder)
                     .into(thumb);
-            root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, MovieDetailActivity.class);
-                    /*
-                    * Not possible to use viewmodel because of the way the ViewModel class is
-                    * instantiated (using an instance of LifecycleActivity). That approach makes
-                    * more sense for passing data between fragments, not activities.
-                    * */
-                    intent.putExtra(MovieDetailActivity.MOVIE_POSTER, movie.getBackdropPath());
-                    intent.putExtra(MovieDetailActivity.MOVIE_TITLE, movie.getTitle());
-                    intent.putExtra(MovieDetailActivity.MOVIE_ID, movie.getId());
-                    intent.putExtra(MovieDetailActivity.MOVIE_DETAILS, movie.getOverview());
-                    context.startActivity(intent);
-                }
+            root.setOnClickListener(view1 -> {
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                MovieDetailViewModel.getInstance().movie = movie;
+                context.startActivity(intent);
             });
         }
         return root;

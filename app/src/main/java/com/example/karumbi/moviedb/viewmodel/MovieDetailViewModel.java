@@ -1,6 +1,6 @@
 package com.example.karumbi.moviedb.viewmodel;
 
-import com.example.karumbi.moviedb.App;
+import com.example.karumbi.moviedb.dependency_injection.NetworkComponent;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.network.NetworkManagerInterface;
 
@@ -16,11 +16,12 @@ public class MovieDetailViewModel {
 
     private static MovieDetailViewModel instance;
 
+    public Movie movie;
+
     @Inject
     NetworkManagerInterface networkManager;
 
     private MovieDetailViewModel() {
-        App.INSTANCE.networkComponent.inject(this);
     }
 
     public static MovieDetailViewModel getInstance() {
@@ -28,6 +29,12 @@ public class MovieDetailViewModel {
             instance = new MovieDetailViewModel();
         }
         return instance;
+    }
+
+    public void inject(NetworkComponent component) {
+        if (instance != null) {
+            component.inject(instance);
+        }
     }
 
     public Observable<Movie> getMovieDetails(String movieId) {
