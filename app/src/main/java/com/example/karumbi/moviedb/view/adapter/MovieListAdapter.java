@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.example.karumbi.moviedb.R;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.util.Utils;
-import com.example.karumbi.moviedb.view.activity.MovieDetail;
+import com.example.karumbi.moviedb.view.activity.MovieDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -76,16 +76,16 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.VH> 
             movieTag.setText(Utils.truncate(movie.getOverview()));
             movieRating.setText(String.valueOf(movie.getVoteAverage()));
             Picasso.with(root.getContext())
-                    .load(Utils.getPosterUrl(movie.getBackdropPath()))
+                    .load(Utils.getBackdropUrl(movie.getBackdropPath()))
                     .into(moviePoster);
             root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(root.getContext(), MovieDetail.class);
-                    intent.putExtra(MovieDetail.MOVIE_POSTER, movie.getBackdropPath());
-                    intent.putExtra(MovieDetail.MOVIE_TITLE, movie.getTitle());
-                    intent.putExtra(MovieDetail.MOVIE_ID, movie.getId());
-                    intent.putExtra(MovieDetail.MOVIE_DETAILS, movie.getOverview());
+                    Intent intent = new Intent(root.getContext(), MovieDetailActivity.class);
+                    intent.putExtra(MovieDetailActivity.MOVIE_POSTER, movie.getBackdropPath());
+                    intent.putExtra(MovieDetailActivity.MOVIE_TITLE, movie.getTitle());
+                    intent.putExtra(MovieDetailActivity.MOVIE_ID, movie.getId());
+                    intent.putExtra(MovieDetailActivity.MOVIE_DETAILS, movie.getOverview());
                     if (root.getContext() instanceof Activity) {
                         Activity activity = (Activity) root.getContext();
                         ActivityOptionsCompat optionsCompat =

@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MovieDetail extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity {
 
     public static final String MOVIE_TITLE = "movie_title";
     public static final String MOVIE_POSTER = "movie_poster";
@@ -46,7 +46,7 @@ public class MovieDetail extends AppCompatActivity {
         setSupportActionBar(toolbar);
         String posterPath = getIntent().getStringExtra(MOVIE_POSTER);
         Picasso.with(this)
-                .load(Utils.getPosterUrl(posterPath))
+                .load(Utils.getBackdropUrl(posterPath))
                 .into(moviePoster);
         String detailsSummary = getIntent().getStringExtra(MOVIE_DETAILS);
         movieDetails.setText(detailsSummary);

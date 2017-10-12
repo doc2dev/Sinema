@@ -2,4 +2,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="recycler_paddingX">8dp</dimen>
     <dimen name="star_dimen">20dp</dimen>
+    <dimen name="search_img">48dp</dimen>
 </resources>
