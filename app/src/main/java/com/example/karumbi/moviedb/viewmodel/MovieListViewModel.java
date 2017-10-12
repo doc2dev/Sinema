@@ -2,7 +2,7 @@ package com.example.karumbi.moviedb.viewmodel;
 
 import com.example.karumbi.moviedb.dependency_injection.NetworkComponent;
 import com.example.karumbi.moviedb.model.MovieResult;
-import com.example.karumbi.moviedb.network.NetworkManagerInterface;
+import com.example.karumbi.moviedb.network.NetworkManager;
 
 import javax.inject.Inject;
 
@@ -13,7 +13,7 @@ public class MovieListViewModel {
     private static MovieListViewModel instance;
 
     @Inject
-    NetworkManagerInterface networkManager;
+    NetworkManager networkManager;
 
     private MovieListViewModel() {
     }

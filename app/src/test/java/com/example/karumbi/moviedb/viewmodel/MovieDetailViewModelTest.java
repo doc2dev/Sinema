@@ -1,8 +1,9 @@
 package com.example.karumbi.moviedb.viewmodel;
 
-import com.example.karumbi.moviedb.dependency_injection.DaggerTestNetworkComponent;
+
 import com.example.karumbi.moviedb.dependency_injection.NetworkComponent;
-import com.example.karumbi.moviedb.dependency_injection.TestNetworkModule;
+import com.example.karumbi.moviedb.dependency_injection.mocks.DaggerTestNetworkComponentJvm;
+import com.example.karumbi.moviedb.dependency_injection.mocks.TestNetworkModuleJvm;
 import com.example.karumbi.moviedb.model.Movie;
 
 import org.junit.Before;
@@ -22,8 +23,8 @@ public class MovieDetailViewModelTest {
 
     @Before
     public void setup() {
-        NetworkComponent networkComponent = DaggerTestNetworkComponent.builder()
-                .testNetworkModule(new TestNetworkModule())
+        NetworkComponent networkComponent = DaggerTestNetworkComponentJvm.builder()
+                .testNetworkModuleJvm(new TestNetworkModuleJvm())
                 .build();
         viewModel = MovieDetailViewModel.getInstance();
         viewModel.inject(networkComponent);
