@@ -1,22 +1,23 @@
 package com.example.karumbi.moviedb.dependency_injection;
 
-import android.content.Context;
-
-import com.example.karumbi.moviedb.App;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.model.MovieResult;
 import com.example.karumbi.moviedb.network.NetworkManagerInterface;
-import com.example.karumbi.moviedb.network.ResultCallback;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import rx.Observable;
 
 @Module
 public class TestNetworkModule {
@@ -26,27 +27,34 @@ public class TestNetworkModule {
     NetworkManagerInterface provideNetworkManager() {
         return new NetworkManagerInterface() {
             @Override
-            public void getMovieDetail(String movieId, ResultCallback<Movie> callback) {
-                callback.onResult(getSample().getMovieList().get(0));
+            public Observable<Movie> getMovieDetail(String movieId) {
+                return Observable.just(getSample().getMovieList().get(0));
             }
 
             @Override
-            public void fetchMovies(ResultCallback<MovieResult> callback) {
-                MovieResult result = getSample();
-                callback.onResult(result);
+            public Observable<MovieResult> fetchMovies() {
+                return Observable.just(getSample());
             }
 
             @Override
-            public void searchMovies(String query, ResultCallback<MovieResult> callback) {
-                callback.onResult(getSample());
+            public Observable<MovieResult> searchMovies(String query) {
+                return Observable.just(search(query));
             }
         };
     }
 
+    private MovieResult search(String query) {
+        List<Movie> results = new ArrayList<>();
+        List<Movie> existing = getSample().getMovieList();
+        results.addAll(existing.stream().filter(m -> m.getTitle().toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList()));
+        MovieResult newResult = new MovieResult();
+        newResult.setMovieList(results);
+        return newResult;
+    }
+
     private MovieResult getSample() {
         try {
-            Context context = App.INSTANCE;
-            InputStream is = context.getAssets().open("test_list.json");
+            InputStream is = new FileInputStream("test_list.json");
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             StringBuilder builder = new StringBuilder();
             String textLine = bufferedReader.readLine();

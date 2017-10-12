@@ -1,7 +1,5 @@
 package com.example.karumbi.moviedb.view.activity;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +17,9 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -26,9 +27,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     public static final String MOVIE_POSTER = "movie_poster";
     public static final String MOVIE_ID = "movie_id";
     public static final String MOVIE_DETAILS = "movie_details";
-
-    private MovieDetailViewModel viewModel;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.movie_poster)
@@ -37,6 +35,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movieDetails;
     @BindView(R.id.loading)
     ProgressBar progressBar;
+    private MovieDetailViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,16 +51,17 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieDetails.setText(detailsSummary);
         String title = getIntent().getStringExtra(MOVIE_TITLE);
         getSupportActionBar().setTitle(title);
-        viewModel = ViewModelProviders.of(this).get(MovieDetailViewModel.class);
-        viewModel.movieObservable.observe(this, new Observer<Movie>() {
-            @Override
-            public void onChanged(@Nullable Movie movie) {
-                showMovieDetails(movie);
-            }
-        });
+        viewModel = MovieDetailViewModel.getInstance();
         progressBar.setVisibility(View.VISIBLE);
         String id = String.valueOf(getIntent().getIntExtra(MOVIE_ID, -1));
-        viewModel.getMovieDetails(id);
+        fetchMovieDetails(id);
+    }
+
+    private void fetchMovieDetails(String id) {
+        viewModel.getMovieDetails(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::showMovieDetails);
     }
 
     private void showMovieDetails(Movie movie) {

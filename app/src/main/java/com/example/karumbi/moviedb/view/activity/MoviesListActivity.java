@@ -1,41 +1,30 @@
 package com.example.karumbi.moviedb.view.activity;
 
 import android.app.ProgressDialog;
-import android.app.SearchManager;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.karumbi.moviedb.App;
 import com.example.karumbi.moviedb.R;
 import com.example.karumbi.moviedb.model.Movie;
-import com.example.karumbi.moviedb.util.Utils;
+import com.example.karumbi.moviedb.model.MovieResult;
 import com.example.karumbi.moviedb.view.adapter.MovieListAdapter;
 import com.example.karumbi.moviedb.view.adapter.SearchAdapter;
 import com.example.karumbi.moviedb.viewmodel.MovieListViewModel;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class MoviesListActivity extends AppCompatActivity {
@@ -58,18 +47,12 @@ public class MoviesListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Popular Movies");
+        toolbar.setTitle(R.string.popular_title);
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        viewModel = ViewModelProviders.of(this)
-                .get(MovieListViewModel.class);
-        viewModel.inject(App.INSTANCE.networkComponent);
-        viewModel.movieObservable.observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                displayMovieList(movies);
-            }
-        });
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.label_loading));
+        viewModel = MovieListViewModel.getInstance(App.INSTANCE.networkComponent);
         fetchMovies();
         setUpSearch();
     }
@@ -77,12 +60,6 @@ public class MoviesListActivity extends AppCompatActivity {
     private void setUpSearch() {
         searchAdapter = new SearchAdapter(this);
         searchResults.setAdapter(searchAdapter);
-        viewModel.searchObservable.observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
-                searchAdapter.setMovies(movies);
-            }
-        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -96,12 +73,9 @@ public class MoviesListActivity extends AppCompatActivity {
                 return false;
             }
         });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                searchResults.setVisibility(View.GONE);
-                return false;
-            }
+        searchView.setOnCloseListener(() -> {
+            searchResults.setVisibility(View.GONE);
+            return false;
         });
     }
 
@@ -117,16 +91,25 @@ public class MoviesListActivity extends AppCompatActivity {
 
     private void fetchMovies() {
         progressDialog.show();
-        viewModel.fetchMovies();
-    }
+        viewModel.fetchPopularMovies()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MovieResult>() {
+                    @Override
+                    public void onCompleted() {
+                        progressDialog.hide();
+                    }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            findMovie(query);
-        }
+                    @Override
+                    public void onError(Throwable e) {
+                        progressDialog.hide();
+                    }
+
+                    @Override
+                    public void onNext(MovieResult movieResult) {
+                        displayMovieList(movieResult.getMovieList());
+                    }
+                });
     }
 
     private void findMovie(String query) {
@@ -136,6 +119,24 @@ public class MoviesListActivity extends AppCompatActivity {
         } else {
             searchResults.setVisibility(View.VISIBLE);
         }
-        viewModel.searchMovies(query);
+        viewModel.searchMovies(query)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MovieResult>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(MovieResult movieResult) {
+                        searchAdapter.setMovies(movieResult.getMovieList());
+                    }
+                });
     }
 }

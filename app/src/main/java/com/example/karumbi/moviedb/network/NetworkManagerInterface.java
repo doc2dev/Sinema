@@ -3,14 +3,16 @@ package com.example.karumbi.moviedb.network;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.model.MovieResult;
 
+import rx.Observable;
+
 /**
  * Created by Eston on 12/10/2017.
  */
 
 public interface NetworkManagerInterface {
-    void getMovieDetail(String movieId, ResultCallback<Movie> callback);
+    Observable<Movie> getMovieDetail(String movieId);
 
-    void fetchMovies(ResultCallback<MovieResult> callback);
+    Observable<MovieResult> fetchMovies();
 
-    void searchMovies(String query, ResultCallback<MovieResult> callback);
+    Observable<MovieResult> searchMovies(String query);
 }
