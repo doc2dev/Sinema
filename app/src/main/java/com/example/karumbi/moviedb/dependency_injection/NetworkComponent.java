@@ -1,7 +1,7 @@
-package com.example.karumbi.moviedb.dependency_injection.components;
+package com.example.karumbi.moviedb.dependency_injection;
 
-import com.example.karumbi.moviedb.dependency_injection.modules.NetworkModule;
-import com.example.karumbi.moviedb.network.NetworkManager;
+import com.example.karumbi.moviedb.dependency_injection.NetworkModule;
+import com.example.karumbi.moviedb.network.NetworkManagerInterface;
 import com.example.karumbi.moviedb.viewmodel.MovieDetailViewModel;
 import com.example.karumbi.moviedb.viewmodel.MovieListViewModel;
 
@@ -16,5 +16,5 @@ public interface NetworkComponent {
 
     void inject(MovieDetailViewModel viewModel);
 
-    void inject(NetworkManager networkManager);
+    void inject(NetworkManagerInterface networkManager);
 }

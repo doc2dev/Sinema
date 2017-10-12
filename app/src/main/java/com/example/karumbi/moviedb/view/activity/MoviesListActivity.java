@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.karumbi.moviedb.App;
 import com.example.karumbi.moviedb.R;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.util.Utils;
@@ -62,6 +63,7 @@ public class MoviesListActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         viewModel = ViewModelProviders.of(this)
                 .get(MovieListViewModel.class);
+        viewModel.inject(App.INSTANCE.networkComponent);
         viewModel.movieObservable.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {

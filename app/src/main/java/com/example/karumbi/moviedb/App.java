@@ -2,9 +2,9 @@ package com.example.karumbi.moviedb;
 
 import android.app.Application;
 
-import com.example.karumbi.moviedb.dependency_injection.components.DaggerNetworkComponent;
-import com.example.karumbi.moviedb.dependency_injection.components.NetworkComponent;
-import com.example.karumbi.moviedb.dependency_injection.modules.NetworkModule;
+import com.example.karumbi.moviedb.dependency_injection.DaggerNetworkComponent;
+import com.example.karumbi.moviedb.dependency_injection.NetworkComponent;
+import com.example.karumbi.moviedb.dependency_injection.NetworkModule;
 import com.example.karumbi.moviedb.util.Constants;
 
 import timber.log.Timber;
@@ -15,8 +15,8 @@ import timber.log.Timber;
 
 public class App extends Application {
 
-    public NetworkComponent networkComponent;
     public static App INSTANCE;
+    public NetworkComponent networkComponent;
 
     @Override
     public void onCreate() {

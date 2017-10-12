@@ -11,7 +11,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class NetworkManager {
+public class NetworkManager implements NetworkManagerInterface {
 
     @Inject
     ApiService apiService;
@@ -20,6 +20,7 @@ public class NetworkManager {
         App.INSTANCE.networkComponent.inject(this);
     }
 
+    @Override
     public void getMovieDetail(String movieId, final ResultCallback<Movie> callback) {
         apiService.getMovie(movieId)
                 .enqueue(new Callback<Movie>() {
@@ -42,6 +43,7 @@ public class NetworkManager {
                 });
     }
 
+    @Override
     public void fetchMovies(final ResultCallback<MovieResult> callback) {
         apiService.getPopularMovies()
                 .enqueue(new Callback<MovieResult>() {
@@ -64,6 +66,7 @@ public class NetworkManager {
                 });
     }
 
+    @Override
     public void searchMovies(String query, final ResultCallback<MovieResult> callback) {
         apiService.searchMovies(query)
                 .enqueue(new Callback<MovieResult>() {

@@ -1,8 +1,9 @@
-package com.example.karumbi.moviedb.dependency_injection.modules;
+package com.example.karumbi.moviedb.dependency_injection;
 
 import com.example.karumbi.moviedb.network.ApiService;
 import com.example.karumbi.moviedb.network.ApiServiceFactory;
 import com.example.karumbi.moviedb.network.NetworkManager;
+import com.example.karumbi.moviedb.network.NetworkManagerInterface;
 
 import javax.inject.Singleton;
 
@@ -20,7 +21,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    NetworkManager provideNetworkManager() {
+    NetworkManagerInterface provideNetworkManager() {
         return new NetworkManager();
     }
 

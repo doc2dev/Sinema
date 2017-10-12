@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import com.example.karumbi.moviedb.App;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.network.NetworkManager;
+import com.example.karumbi.moviedb.network.NetworkManagerInterface;
 import com.example.karumbi.moviedb.network.ResultCallback;
 
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ public class MovieDetailViewModel extends ViewModel {
     public MutableLiveData<Movie> movieObservable;
 
     @Inject
-    NetworkManager networkManager;
+    NetworkManagerInterface networkManager;
 
     public MovieDetailViewModel() {
         movieObservable = new MutableLiveData<>();
