@@ -1,8 +1,11 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="recycler_paddingX">8dp</dimen>
+    <dimen name="recycler_paddingX">4dp</dimen>
     <dimen name="star_dimen">20dp</dimen>
     <dimen name="search_img">48dp</dimen>
     <dimen name="details_padding">12dp</dimen>
     <dimen name="details_marginX">12dp</dimen>
+    <dimen name="text_marginX">12dp</dimen>
+    <dimen name="card_marginX">2dp</dimen>
+    <dimen name="card_marginY">4dp</dimen>
 </resources>

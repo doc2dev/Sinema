@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    android:padding="4dp"
+    android:layout_marginStart="@dimen/card_marginX"
+    android:layout_marginEnd="@dimen/card_marginX"
+    android:layout_marginTop="@dimen/card_marginY"
+    android:layout_marginBottom="@dimen/card_marginY"
     android:background="@color/colorAccent"
     android:transitionName="imageTransition">
 
@@ -24,14 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:padding="4dp">
 
             <TextView
                 android:id="@+id/movie_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="8dp"
+                android:textStyle="bold"
                 tools:text="Movie name (2017)" />
 
             <LinearLayout
@@ -62,7 +67,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="@dimen/text_marginX"
+            android:layout_marginEnd="@dimen/text_marginX"
             tools:text="Lorem ipsum dolor sit amet ..." />
 
     </LinearLayout>

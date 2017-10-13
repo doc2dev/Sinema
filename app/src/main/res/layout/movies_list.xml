@@ -22,7 +22,8 @@
                 android:id="@+id/movie_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true" />
+                android:clickable="true"
+               app:defaultQueryHint="@string/hint_search"/>
 
         </android.support.v7.widget.Toolbar>
 
