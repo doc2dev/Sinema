@@ -36,16 +36,13 @@ configurations.all {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    androidTestCompile'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    compile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
     androidTestCompile 'com.squareup.okhttp3:mockwebserver:3.3.0'
     testCompile 'junit:junit:4.12'
-    testCompile 'com.squareup.okhttp3:mockwebserver:3.3.0'
-    testCompile "org.mockito:mockito-core:2.+"
     testCompile 'org.assertj:assertj-core:2.8.0'
     androidTestCompile 'org.assertj:assertj-core:2.8.0'
     // Support libs

@@ -21,8 +21,8 @@ public class MovieListViewModel {
     public static MovieListViewModel getInstance(NetworkComponent component) {
         if (instance == null) {
             instance = new MovieListViewModel();
+            component.inject(instance);
         }
-        component.inject(instance);
         return instance;
     }
 

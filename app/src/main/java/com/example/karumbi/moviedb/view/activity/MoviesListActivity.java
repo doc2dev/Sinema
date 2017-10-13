@@ -2,6 +2,11 @@ package com.example.karumbi.moviedb.view.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +45,8 @@ public class MoviesListActivity extends AppCompatActivity {
     private MovieListAdapter adapter;
     private SearchAdapter searchAdapter;
 
+    CountingIdlingResource countingIdlingResource = new CountingIdlingResource("LOADER");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +60,7 @@ public class MoviesListActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage(getString(R.string.label_loading));
         viewModel = MovieListViewModel.getInstance(App.INSTANCE.networkComponent);
+        countingIdlingResource.increment();
         fetchMovies();
         setUpSearch();
     }
@@ -87,6 +95,8 @@ public class MoviesListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         progressDialog.hide();
+        //idlingResource.setIdleState(true);
+        countingIdlingResource.decrement();
     }
 
     private void fetchMovies() {
