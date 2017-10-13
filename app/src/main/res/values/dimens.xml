@@ -3,4 +3,6 @@
     <dimen name="recycler_paddingX">8dp</dimen>
     <dimen name="star_dimen">20dp</dimen>
     <dimen name="search_img">48dp</dimen>
+    <dimen name="details_padding">12dp</dimen>
+    <dimen name="details_marginX">12dp</dimen>
 </resources>

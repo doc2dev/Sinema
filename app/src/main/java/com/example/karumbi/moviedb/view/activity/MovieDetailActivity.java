@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.karumbi.moviedb.App;
 import com.example.karumbi.moviedb.R;
+import com.example.karumbi.moviedb.model.Genre;
 import com.example.karumbi.moviedb.model.Movie;
 import com.example.karumbi.moviedb.util.Utils;
 import com.example.karumbi.moviedb.viewmodel.MovieDetailViewModel;
@@ -19,7 +20,6 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -32,6 +32,20 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movieDetails;
     @BindView(R.id.loading)
     ProgressBar progressBar;
+    @BindView(R.id.detail_content)
+    View detailContent;
+    @BindView(R.id.movie_tag)
+    TextView movieTag;
+    @BindView(R.id.movie_genre)
+    TextView movieGenre;
+    @BindView(R.id.movie_rating)
+    TextView movieRating;
+    @BindView(R.id.movie_date)
+    TextView releaseDate;
+    @BindView(R.id.movie_run_time)
+    TextView runningTime;
+    @BindView(R.id.back)
+    View backButton;
     private MovieDetailViewModel viewModel;
 
     @Override
@@ -42,13 +56,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         viewModel = MovieDetailViewModel.getInstance();
         viewModel.inject(App.INSTANCE.networkComponent);
+        showAvailableDetails();
+    }
+
+    private void showAvailableDetails() {
         Movie movie = viewModel.movie;
         Picasso.with(this)
-                .load(Utils.getBackdropUrl(movie.getPosterPath()))
+                .load(Utils.getBackdropUrl(movie.getBackdropPath()))
                 .into(moviePoster);
         movieDetails.setText(movie.getOverview());
         getSupportActionBar().setTitle(movie.getTitle());
         progressBar.setVisibility(View.VISIBLE);
+        backButton.setOnClickListener(view -> onBackPressed());
         fetchMovieDetails(String.valueOf(movie.getId()));
     }
 
@@ -62,7 +81,20 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void showMovieDetails(Movie movie) {
         progressBar.setVisibility(View.GONE);
         if (movie != null) {
-
+            detailContent.setVisibility(View.VISIBLE);
+            movieTag.setText(getString(R.string.tagline, movie.getTagline()));
+            StringBuilder genres = new StringBuilder();
+            for (int i = 0; i < movie.getGenres().size(); i++) {
+                Genre genre = movie.getGenres().get(i);
+                genres.append(genre.getName());
+                if (i < (movie.getGenres().size() - 1)) {
+                    genres.append(", ");
+                }
+            }
+            movieGenre.setText(getString(R.string.genres, genres.toString()));
+            movieRating.setText(getString(R.string.rating, String.valueOf(movie.getVoteAverage())));
+            releaseDate.setText(getString(R.string.release_date, movie.getReleaseDate()));
+            runningTime.setText(getString(R.string.running_time, String.valueOf(movie.getRuntime())));
         }
     }
 }

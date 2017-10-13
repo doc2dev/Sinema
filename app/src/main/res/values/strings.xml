@@ -3,5 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="movie_title">%1$s (%2$s)</string>
     <string name="popular_title">Popular Movies</string>
-    <string name="label_loading">Loading...</string>
+    <string name="label_loading">Loading…</string>
+    <string name="rating">Rating: %1$s</string>
+    <string name="release_date">Release date:  %1$s</string>
+    <string name="running_time">Running time:  %1$s minutes</string>
+    <string name="genres">Genres:  %1$s</string>
+    <string name="tagline">&quot;%1$s&quot;</string>
 </resources>
