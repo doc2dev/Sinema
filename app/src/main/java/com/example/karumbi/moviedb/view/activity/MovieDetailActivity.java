@@ -2,6 +2,7 @@ package com.example.karumbi.moviedb.view.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -47,6 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.back)
     View backButton;
     private MovieDetailViewModel viewModel;
+    CountingIdlingResource countingIdlingResource = new CountingIdlingResource("DETAILS");
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void showAvailableDetails() {
+        countingIdlingResource.increment();
         Movie movie = viewModel.movie;
         Picasso.with(this)
                 .load(Utils.getBackdropUrl(movie.getBackdropPath()))
@@ -96,5 +99,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             releaseDate.setText(getString(R.string.release_date, movie.getReleaseDate()));
             runningTime.setText(getString(R.string.running_time, String.valueOf(movie.getRuntime())));
         }
+        countingIdlingResource.decrement();
     }
 }
