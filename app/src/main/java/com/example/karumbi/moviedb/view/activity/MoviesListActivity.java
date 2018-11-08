@@ -46,6 +46,7 @@ public class MoviesListActivity extends AppCompatActivity {
     private SearchAdapter searchAdapter;
 
     CountingIdlingResource countingIdlingResource = new CountingIdlingResource("LOADER");
+    private List<Movie> movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class MoviesListActivity extends AppCompatActivity {
         });
     }
 
-    private void displayMovieList(List<Movie> movies) {
+    private void displayMovieList() {
         Timber.d("Showing list...");
         adapter = new MovieListAdapter(movies);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -100,26 +101,31 @@ public class MoviesListActivity extends AppCompatActivity {
     }
 
     private void fetchMovies() {
-        progressDialog.show();
-        viewModel.fetchPopularMovies()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<MovieResult>() {
-                    @Override
-                    public void onCompleted() {
-                        progressDialog.hide();
-                    }
+        if (movies == null) {
+          progressDialog.show();
+          viewModel.fetchPopularMovies()
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new Subscriber<MovieResult>() {
+                @Override
+                public void onCompleted() {
+                  progressDialog.hide();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        progressDialog.hide();
-                    }
+                @Override
+                public void onError(Throwable e) {
+                  progressDialog.hide();
+                }
 
-                    @Override
-                    public void onNext(MovieResult movieResult) {
-                        displayMovieList(movieResult.getMovieList());
-                    }
-                });
+                @Override
+                public void onNext(MovieResult movieResult) {
+                  movies = movieResult.getMovieList();
+                  displayMovieList();
+                }
+              });
+        } else {
+          displayMovieList();
+        }
     }
 
     private void findMovie(String query) {
@@ -149,4 +155,12 @@ public class MoviesListActivity extends AppCompatActivity {
                     }
                 });
     }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    if (progressDialog != null) {
+      progressDialog.hide();
+    }
+  }
 }
