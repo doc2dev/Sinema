@@ -28,7 +28,7 @@ public class App extends Application {
         }
         networkComponent = DaggerNetworkComponent
                 .builder()
-                .networkModule(new NetworkModule(Constants.BASE_URL))
+                .networkModule(new NetworkModule(Constants.INSTANCE.getBASE_URL()))
                 .build();
     }
 }
